@@ -29,3 +29,11 @@ spring:
 spring-doc:
   swagger-ui:
     operationsSorter: method
+
+#Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "beans"

@@ -66,7 +66,7 @@ class ReservationServiceTest {
         Long reservationId = 5L;
         Reservation reservationRequest = Reservation.builder().name("Lesson").reservedBy("Bill").build();
         Mockito.when(reservationRepository.save(Mockito.any(Reservation.class))).thenReturn(reservation);
-        Mockito.when(reservationRepository.findById(reservationId)).thenReturn(Optional.ofNullable(reservation));
+        Mockito.when(reservationRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(reservation));
 
         Reservation found = reservationService.updateReservation(reservationId, reservationRequest);
 

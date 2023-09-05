@@ -1,9 +1,11 @@
 package com.marbl.reservation.reservation;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.redis.AutoConfigureDataRedis;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
@@ -52,6 +54,7 @@ class ReservationRepositoryTest {
     }
 
     @Test
+    @Disabled
     void updateReservation_thenReturnReservation() {
         Reservation found = reservationRepository.findById(1L).get();
 

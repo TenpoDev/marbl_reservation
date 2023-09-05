@@ -8,7 +8,7 @@
         <version>3.1.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.tenpo</groupId>
+    <groupId>com.marbl</groupId>
     <artifactId>reservation</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>reservation</name>
@@ -21,7 +21,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -39,6 +38,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>

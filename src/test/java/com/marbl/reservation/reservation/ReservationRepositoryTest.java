@@ -53,15 +53,14 @@ class ReservationRepositoryTest {
 
     @Test
     void updateReservation_thenReturnReservation() {
-        Optional<Reservation> found = reservationRepository.findById(1L);
+        Reservation found = reservationRepository.findById(1L).get();
 
-        Reservation foundDto = found.get();
-        foundDto.setName("Gym");
-        foundDto.setReservedBy("Luis");
+        found.setName("Gym");
+        found.setReservedBy("Luis");
 
-       foundDto = reservationRepository.save(foundDto);
+        found = reservationRepository.save(found);
 
-        assertEquals(foundDto.getName(), "Gym");
+        assertEquals(found.getName(), "Gym");
     }
 
     @Test

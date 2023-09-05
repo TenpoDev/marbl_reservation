@@ -43,10 +43,10 @@ class ReservationServiceTest {
     @DisplayName("Get Reservation By Id")
     void getReservation_usingInputId() throws MarblException {
         Long reservationId = 5L;
-        Reservation found = reservationService.getReservation(reservationId);
-
         Mockito.when(reservationRepository.findById(5L)).thenReturn(Optional.of(reservation));
 
+        Reservation found = reservationService.getReservation(reservationId);
+        reservationService = new ReservationService(reservationRepository);
         assertEquals(reservationId, found.getId());
     }
 
@@ -63,13 +63,14 @@ class ReservationServiceTest {
 
     @Test
     void saveReservation_updateStoredReservationFindById() throws MarblException {
-        Long reservationId = 1L;
+        Long reservationId = 5L;
         Reservation reservationRequest = Reservation.builder().name("Lesson").reservedBy("Bill").build();
-
         Mockito.when(reservationRepository.save(Mockito.any(Reservation.class))).thenReturn(reservation);
+        Mockito.when(reservationRepository.findById(reservationId)).thenReturn(Optional.ofNullable(reservation));
 
         Reservation found = reservationService.updateReservation(reservationId, reservationRequest);
 
+        reservationService = new ReservationService(reservationRepository);
         assertEquals(reservation.getName(), found.getName());
     }
 

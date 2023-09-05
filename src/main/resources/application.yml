@@ -1,0 +1,31 @@
+#Hibernate Log on Console
+hibernate:
+  show_sql: true
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+#H2 Config
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    password: password
+    url: jdbc:h2:mem:reservationApp
+    username: sa
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+#OpenAPi - Swagger
+spring-doc:
+  swagger-ui:
+    operationsSorter: method

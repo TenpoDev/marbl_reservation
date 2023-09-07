@@ -3,14 +3,11 @@ package com.marbl.reservation.reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.redis.AutoConfigureDataRedis;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,8 +22,8 @@ class ReservationRepositoryTest {
     void setUp() {
         Reservation reservation =
                 Reservation.builder()
-                        .name("Private Lesson")
-                        .reservedBy("Bill")
+                        .reservationTitle("Private Lesson")
+                        .reservationReservedById("Bill")
                         .build();
 
         entityManager.persist(reservation);
@@ -36,21 +33,21 @@ class ReservationRepositoryTest {
     void findAll_thenReturnReservationsList() {
         List<Reservation> found = reservationRepository.findAll();
 
-        assertEquals("Private Lesson", found.get(0).getName());
+        assertEquals("Private Lesson", found.get(0).getReservationTitle());
     }
 
     @Test
     void findById_thenReturnReservation() {
         Reservation found = reservationRepository.findById(1L).get();
 
-        assertEquals("Private Lesson", found.getName());
+        assertEquals("Private Lesson", found.getReservationTitle());
     }
 
     @Test
     void saveNewReservation_thenReturnReservation() {
-        Reservation found = reservationRepository.save(Reservation.builder().name("Gym").reservedBy("Linus").build());
+        Reservation found = reservationRepository.save(Reservation.builder().reservationTitle("Gym").reservationReservedById("Linus").build());
 
-        assertTrue(reservationRepository.existsById(found.getId()));
+        assertTrue(reservationRepository.existsById(found.getReservationId()));
     }
 
     @Test
@@ -58,12 +55,12 @@ class ReservationRepositoryTest {
     void updateReservation_thenReturnReservation() {
         Reservation found = reservationRepository.findById(1L).get();
 
-        found.setName("Gym");
-        found.setReservedBy("Luis");
+        found.setReservationTitle("Gym");
+        found.setReservationReservedById("Luis");
 
         found = reservationRepository.save(found);
 
-        assertEquals(found.getName(), "Gym");
+        assertEquals(found.getReservationTitle(), "Gym");
     }
 
     @Test

@@ -74,7 +74,7 @@ public class ReservationController {
         response.setPath(httpServletRequest.getServletPath());
         Reservation result = reservationService.saveNewReservation(reservationRequest);
 
-        response.setReservationId(result.getId());
+        response.setReservationId(result.getReservationId());
         return ResponseEntity.ok(response);
     }
 
@@ -91,7 +91,7 @@ public class ReservationController {
         response.setPath(httpServletRequest.getServletPath());
 
         Reservation result = reservationService.updateReservation(reservationId,reservationRequest);
-        response.setReservationId(result.getId());
+        response.setReservationId(result.getReservationId());
         return ResponseEntity.ok(response);
     }
 

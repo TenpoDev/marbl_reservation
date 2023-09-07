@@ -31,7 +31,7 @@ class ReservationControllerTest {
 
     @BeforeEach
     void setUp() {
-        reservation = Reservation.builder().id(1L).name("Math Lesson").reservedBy("Luis Alberic").build();
+        reservation = Reservation.builder().reservationId(1L).reservationTitle("Math Lesson").reservedBy("Luis Alberic").build();
     }
 
     @Test
@@ -39,8 +39,8 @@ class ReservationControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setServletPath("/reservations");
 
-        Reservation reservation = Reservation.builder().id(1L).name("Math Lesson").reservedBy("Luis Alberic").build();
-        Reservation reservation2 = Reservation.builder().id(2L).name("Gym Lesson").reservedBy("Althea Alberic").build();
+        Reservation reservation = Reservation.builder().reservationId(1L).reservationTitle("Math Lesson").reservedBy("Luis Alberic").build();
+        Reservation reservation2 = Reservation.builder().reservationId(2L).reservationTitle("Gym Lesson").reservedBy("Althea Alberic").build();
         List<Reservation> allReservation = Arrays.asList(reservation, reservation2);
         Mockito.when(reservationService.getAllReservation()).thenReturn(allReservation);
 
@@ -48,7 +48,7 @@ class ReservationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr("jakarta.servlet.http.HttpServletRequest", request))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.result[0].name").value(allReservation.get(0).getName()));
+                .andExpect(jsonPath("$.result[0].name").value(allReservation.get(0).getReservationTitle()));
 
     }
 
@@ -57,14 +57,14 @@ class ReservationControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setServletPath("/reservations");
 
-        Reservation reservation = Reservation.builder().id(1L).name("Math Lesson").reservedBy("Luis Alberic").build();
+        Reservation reservation = Reservation.builder().reservationId(1L).reservationTitle("Math Lesson").reservedBy("Luis Alberic").build();
         Mockito.when(reservationService.getReservation(1L)).thenReturn(reservation);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/reservations/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .requestAttr("jakarta.servlet.http.HttpServletRequest", request))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.result.id").value(reservation.getId()));
+                .andExpect(jsonPath("$.result.id").value(reservation.getReservationId()));
     }
 
     @Test
@@ -72,7 +72,7 @@ class ReservationControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setServletPath("/reservations");
 
-        Reservation reservation = Reservation.builder().name("Math Lesson").reservedBy("Luis Alberic").build();
+        Reservation reservation = Reservation.builder().reservationTitle("Math Lesson").reservedBy("Luis Alberic").build();
 
         Mockito.when(reservationService.saveNewReservation(reservation)).thenReturn(reservation);
 
@@ -90,7 +90,7 @@ class ReservationControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setServletPath("/reservations");
 
-        Reservation reservation = Reservation.builder().id(1L).name("Math Lesson").reservedBy("Luis Alberic").build();
+        Reservation reservation = Reservation.builder().reservationId(1L).reservationTitle("Math Lesson").reservedBy("Luis Alberic").build();
         Mockito.when(reservationService.updateReservation(1L, reservation)).thenReturn(reservation);
 
         mockMvc.perform((MockHttpServletRequestBuilder) MockMvcRequestBuilders
@@ -108,7 +108,7 @@ class ReservationControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setServletPath("/reservations");
 
-        Reservation reservation = Reservation.builder().id(1L).name("Math Lesson").reservedBy("Luis Alberic").build();
+        Reservation reservation = Reservation.builder().reservationId(1L).reservationTitle("Math Lesson").reservedBy("Luis Alberic").build();
         Mockito.doNothing().when(reservationService).deleteReservation(reservationId);
 
         mockMvc.perform((MockHttpServletRequestBuilder) MockMvcRequestBuilders

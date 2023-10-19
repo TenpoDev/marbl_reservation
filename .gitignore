@@ -6,3 +6,4 @@ HELP.md
 *.ipr
 
 /src/main/resources/importP.sql
+/target/

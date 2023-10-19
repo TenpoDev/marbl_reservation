@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint( name = "RESERVED_BY", columnNames = "RESERVED_BY"))
+//@Table(uniqueConstraints = @UniqueConstraint( name = "RESERVED_BY", columnNames = "RESERVED_BY"))
 public class Reservation implements Serializable {
 
 
@@ -39,7 +39,5 @@ public class Reservation implements Serializable {
     private LocalTime reservationStart;
     @Column(name = "HOUR_END")
     private LocalTime reservationEnd;
-    @Column(name = "RESERVED_BY", nullable = false)
-    private String reservationReservedById;
 
 }

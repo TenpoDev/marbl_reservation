@@ -18,8 +18,9 @@ public class FeatureEndPoint {
     private final Map<String, Feature> featureMap = new ConcurrentHashMap<>();
 
     private FeatureEndPoint() {
-        featureMap.put("Reservations", new Feature(true));
         featureMap.put("Users", new Feature(false));
+        featureMap.put("Reservations", new Feature(true));
+        featureMap.put("Registry", new Feature(false));
         featureMap.put("Authentication", new Feature(false));
     }
 

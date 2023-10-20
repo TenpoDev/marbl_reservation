@@ -1,4 +1,4 @@
-package com.marbl.reservation.reservation;
+package com.marbl.reservation.event;
 
 import com.marbl.reservation.exception.MarblException;
 import lombok.AllArgsConstructor;

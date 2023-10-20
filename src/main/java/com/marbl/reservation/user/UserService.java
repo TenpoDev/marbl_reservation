@@ -1,7 +1,7 @@
-package com.marbl.reservation.reservation.user;
+package com.marbl.reservation.user;
 
 import com.marbl.reservation.exception.MarblException;
-import com.marbl.reservation.reservation.Reservation;
+import com.marbl.reservation.event.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

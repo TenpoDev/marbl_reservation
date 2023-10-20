@@ -1,7 +1,7 @@
-package com.marbl.reservation.reservation.user;
+package com.marbl.reservation.user;
 
 import com.marbl.reservation.registry.Registry;
-import com.marbl.reservation.reservation.Reservation;
+import com.marbl.reservation.event.Reservation;
 import jakarta.persistence.*;
 import lombok.Data;
 

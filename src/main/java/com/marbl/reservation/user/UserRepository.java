@@ -1,4 +1,4 @@
-package com.marbl.reservation.reservation.user;
+package com.marbl.reservation.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.marbl.reservation.reservation;
+package com.marbl.reservation.event;
 
 public enum ReservationPriority {
     HIGH, MEDIUM, LOW;

@@ -1,4 +1,4 @@
-package com.marbl.reservation.reservation;
+package com.marbl.reservation.event;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,6 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Table(uniqueConstraints = @UniqueConstraint( name = "RESERVED_BY", columnNames = "RESERVED_BY"))
 public class Reservation implements Serializable {
 
 
@@ -29,8 +28,10 @@ public class Reservation implements Serializable {
     private Long reservationId;
     @Column(name = "TITLE")
     private String reservationTitle;
-    @Column(name = "NOTE")
-    private String reservationNote;
+    @Column(name = "DESCRIPTION")
+    private String reservationDescription;
+    @Column(name = "LOCATION")
+    private String reservationLocation;
     @Column(name = "PRIORITY")
     private ReservationPriority reservationPriority;
     @Column(name = "DATE")

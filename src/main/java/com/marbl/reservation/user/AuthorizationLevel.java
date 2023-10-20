@@ -1,4 +1,4 @@
-package com.marbl.reservation.reservation.user;
+package com.marbl.reservation.user;
 
 public enum AuthorizationLevel {
 

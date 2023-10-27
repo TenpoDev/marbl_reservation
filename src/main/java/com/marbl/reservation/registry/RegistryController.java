@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/registry")
+@RequestMapping("/api/v1/registry")
 public class RegistryController {
 
     private final RegistryService registryService;

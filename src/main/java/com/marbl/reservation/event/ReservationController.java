@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/reservations")
+@RequestMapping("/api/v1/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;

@@ -1,17 +1,28 @@
 package com.marbl.reservation.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.marbl.reservation.registry.Registry;
-import com.marbl.reservation.event.Reservation;
+import com.marbl.reservation.booking.Booking;
+import com.marbl.reservation.token.verification.VerificationPassword;
+import com.marbl.reservation.token.verification.VerificationToken;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "app_user")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"userName"}))
 public class User implements Serializable {
 
     @Serial
@@ -22,15 +33,32 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
     private Long userId;
     private String userName;
+    @Column(length = 60)
     private String password;
-    private AuthorizationLevel authLvl;
+    private Role role;
+    private boolean enabled = false;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "registry_Id",referencedColumnName = "registryId")
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "registry_Id", referencedColumnName = "registryId")
     private Registry registry;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
-    private List<Reservation> reservations;
+    private List<Booking> bookings;
+
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<VerificationPassword> verificationPasswords;
+
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<VerificationToken> verificationTokens;
+    public void addVerificationPassword(VerificationPassword verificationPassword) {
+        if (this.verificationPasswords == null) {
+            this.verificationPasswords = new ArrayList<>();
+        }
+        verificationPassword.setUser(this);
+        this.verificationPasswords.add(verificationPassword);
+    }
 
 }

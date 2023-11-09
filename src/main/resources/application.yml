@@ -11,29 +11,30 @@ hibernate:
                 BasicBinder: TRACE
 
 # Configuration H2
-spring:
-  datasource:
-    driverClassName: org.h2.Driver
-    password: password
-    url: jdbc:h2:mem:reservationApp
-    username: sa
-  h2:
-    console:
-      enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-
-# Configuration MySQL
 #spring:
 #  datasource:
-#    url: jdbc:mysql://localhost:3306/marblapp
-#    username: root
-#    password: admin
-#    driver-class-name: com.mysql.jdbc.Driver
+#    driverClassName: org.h2.Driver
+#    password: password
+#    url: jdbc:h2:mem:reservationApp
+#    username: sa
+#  h2:
+#    console:
+#      enabled: true
 #  jpa:
 #    hibernate:
-#      ddl-auto: update
+#      ddl-auto: create-drop
+
+# Configuration MySQL
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/marblapp
+    username: root
+    password: admin
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
 
 # Configuration OpenAPI - Swagger
 spring-doc:
@@ -47,3 +48,7 @@ management:
       exposure:
         include: "*"
         exclude: "beans"
+
+logging:
+  level:
+    root: info

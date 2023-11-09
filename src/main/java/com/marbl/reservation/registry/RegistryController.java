@@ -3,9 +3,9 @@ package com.marbl.reservation.registry;
 import com.marbl.reservation.exception.MarblError;
 import com.marbl.reservation.exception.MarblException;
 import com.marbl.reservation.registry.response.AllRegistryResponse;
-import com.marbl.reservation.registry.response.SaveRegistryResponse;
 import com.marbl.reservation.registry.response.SingleRegistryResponse;
 import com.marbl.reservation.shared.MarblResponse;
+import com.marbl.reservation.shared.SaveResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -50,7 +50,7 @@ public class RegistryController {
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SingleRegistryResponse.class)))})
     public ResponseEntity<MarblResponse<Registry>> getRegistry(@PathVariable("id") Long registryId, HttpServletRequest httpServletRequest) throws MarblException {
-        log.info("Inside [getRegistry] method of [ReservationController]");
+        log.info("Inside [getRegistry] method of [BookingController]");
         MarblResponse<Registry> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
         Registry result = registryService.getRegistry(registryId);
 
@@ -60,11 +60,11 @@ public class RegistryController {
 
     @PostMapping
     @Operation(tags = "Registry", description = "Save a new registry", summary = "We are able to store a new reservation")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveRegistryResponse.class))}),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveRegistryResponse.class)))})
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class)))})
     public ResponseEntity<MarblResponse<Long>> saveRegistry(@Valid @RequestBody Registry registryRequest, HttpServletRequest httpServletRequest) {
-        log.info("Inside [saveRegistry] method of [ReservationController]");
+        log.info("Inside [saveRegistry] method of [BookingController]");
         MarblResponse<Long> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
         Registry result = registryService.saveNewRegistry(registryRequest);
 
@@ -74,11 +74,11 @@ public class RegistryController {
 
     @PutMapping(value = "/{id}")
     @Operation(tags = "Registry", description = "Update a registry", summary = "We are able to update an already stored registry")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveRegistryResponse.class))}),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveRegistryResponse.class)))})
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class)))})
     public ResponseEntity<MarblResponse<Long>> updateRegistry(@PathVariable("id") Long registryId, @Valid @RequestBody Registry registryRequest, HttpServletRequest httpServletRequest) throws MarblException {
-        log.info("Inside [updateRegistry] method of [ReservationController]");
+        log.info("Inside [updateRegistry] method of [BookingController]");
         MarblResponse<Long> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
         Registry result = registryService.updateRegistry(registryId, registryRequest);
 
@@ -91,9 +91,9 @@ public class RegistryController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
-    public ResponseEntity<MarblResponse> deleteRegistry(@PathVariable("id") Long registryId, HttpServletRequest httpServletRequest) throws MarblException {
-        log.info("Inside [deleteRegistry] method of [ReservationController]");
-        MarblResponse<?> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
+    public ResponseEntity<MarblResponse<Object>> deleteRegistry(@PathVariable("id") Long registryId, HttpServletRequest httpServletRequest) throws MarblException {
+        log.info("Inside [deleteRegistry] method of [BookingController]");
+        MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
         registryService.deleteRegistry(registryId);
 
         return ResponseEntity.ok(response);

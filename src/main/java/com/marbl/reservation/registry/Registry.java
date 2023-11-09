@@ -27,11 +27,10 @@ public class Registry implements Serializable {
 
     private String userFirstName;
     private String userLastName;
-    private Long userAddressId;
+    private String userAddress;
     @Embedded
     private Contact contact;
     private LocalDate userBirth;
     private GenderOption userGender;
-
 
 }

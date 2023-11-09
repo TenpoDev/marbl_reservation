@@ -1,6 +1,6 @@
 package com.marbl.reservation.user;
 
-public enum AuthorizationLevel {
+public enum Role {
 
     ADMIN, WORKER, USER;
 

@@ -1,4 +1,4 @@
-package com.marbl.reservation.event;
+package com.marbl.reservation.booking;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,29 +16,29 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation implements Serializable {
+public class Booking implements Serializable {
 
 
     @Serial
     private static final long serialVersionUID = -2257895962332414038L;
 
     @Id
-    @SequenceGenerator(name = "reservation_sequence", sequenceName = "reservation_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_sequence")
-    private Long reservationId;
+    @SequenceGenerator(name = "booking_sequence", sequenceName = "booking_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "booking_sequence")
+    private Long bookingId;
     @Column(name = "TITLE")
-    private String reservationTitle;
+    private String bookingTitle;
     @Column(name = "DESCRIPTION")
-    private String reservationDescription;
+    private String bookingDescription;
     @Column(name = "LOCATION")
-    private String reservationLocation;
+    private String bookingLocation;
     @Column(name = "PRIORITY")
-    private ReservationPriority reservationPriority;
+    private BookingPriority bookingPriority;
     @Column(name = "DATE")
-    private LocalDate reservationDate;
+    private LocalDate bookingDate;
     @Column(name = "HOUR_START")
-    private LocalTime reservationStart;
+    private LocalTime bookingStart;
     @Column(name = "HOUR_END")
-    private LocalTime reservationEnd;
+    private LocalTime bookingEnd;
 
 }

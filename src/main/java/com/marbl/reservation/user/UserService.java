@@ -1,7 +1,7 @@
 package com.marbl.reservation.user;
 
+import com.marbl.reservation.booking.Booking;
 import com.marbl.reservation.exception.MarblException;
-import com.marbl.reservation.event.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -17,7 +17,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private static final String NOT_FOUND = "Reservation is not found.";
+    private static final String NOT_FOUND = "Booking is not found.";
     @Transactional(readOnly = true)
     public List<User> getAllUser() {
         return userRepository.findAll();
@@ -36,7 +36,7 @@ public class UserService {
         return userRepository.save(userRequest);
     }
     @Transactional
-    public User updateReservation(Long userId, Reservation userRequest) throws MarblException {
+    public User updateReservation(Long userId, Booking userRequest) throws MarblException {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()) {
             throw new MarblException(NOT_FOUND);

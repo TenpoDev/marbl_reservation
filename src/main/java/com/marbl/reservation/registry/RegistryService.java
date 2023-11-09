@@ -15,7 +15,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class RegistryService {
 
-    private static final String NOT_FOUND = "Reservation is not found.";
+    private static final String NOT_FOUND = "Booking is not found.";
     private final RegistryRepository registryRepository;
 
     @Transactional(readOnly = true)

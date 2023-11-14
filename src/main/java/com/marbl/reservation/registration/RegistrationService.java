@@ -38,7 +38,7 @@ public class RegistrationService {
     @Transactional
     public User saveNewUser(UserRegistrationForm userRequest) {
         //controllare che le pass sono uguali
-        Contact contactForm = Contact.builder().email(userRequest.getBooking().getContact().getEmail()).mobile(userRequest.getBooking().getContact().getMobile()).build();
+        Contact contactForm = Contact.builder().mobile(userRequest.getBooking().getContact().getMobile()).build();
         Registry registryForm = Registry.builder().userFirstName(userRequest.getBooking().getUserFirstName()).userLastName(userRequest.getBooking().getUserLastName()).userAddress(userRequest.getBooking().getUserAddress()).userGender(userRequest.getBooking().getUserGender()).userBirth(userRequest.getBooking().getUserBirth()).contact(contactForm).build();
         User user = User.builder().userName(userRequest.getUserName()).password(passwordEncoder.encode(userRequest.getPassword())).registry(registryForm).role(Role.USER).enabled(Boolean.FALSE).build();
         return userRepository.save(user);
@@ -91,7 +91,7 @@ public class RegistrationService {
 
     @Transactional
     public User resetPassword(String email) {
-        Optional<User> user = userRepository.findByRegistryContactEmail(email);
+        Optional<User> user = userRepository.findByUserName(email);
         if(user.isPresent()) {
             user.get().setPassword(RandomStringUtils.randomNumeric(8));
             return userRepository.save(user.get());

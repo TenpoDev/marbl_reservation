@@ -4,7 +4,6 @@ import com.marbl.reservation.exception.MarblError;
 import com.marbl.reservation.exception.MarblException;
 import com.marbl.reservation.registration.PasswordResetForm;
 import com.marbl.reservation.shared.MarblResponse;
-import com.marbl.reservation.shared.event.RegistrationResetPasswordEvent;
 import com.marbl.reservation.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,21 +35,21 @@ public class MarblController {
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
     public ResponseEntity<MarblResponse<Object>> login(@RequestParam String token, HttpServletRequest httpServletRequest) throws MarblException {
-        log.info("Inside [verifyRegistration] method of [UserController]");
+        log.info("Inside [verifyRegistration] method of [MarblController]");
         MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.OK.value());
 
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/api/v1/passwords")
-    @Operation(tags = "Registration", description = "Reset Password", summary = "We are able reset the password so the user can proceed with the login.")
+    @PatchMapping(value = "/api/v1/passwords")
+    @Operation(tags = "Password", description = "Reset Password", summary = "We are able reset the password so the user can proceed with the login.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
     public ResponseEntity<MarblResponse<User>> resetPassword(@RequestBody PasswordResetForm passwordResetForm, HttpServletRequest httpServletRequest) throws MarblException {
-        log.info("Inside [resetPassword] method of [UserController]");
-        MarblResponse<User> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.OK.value());
-        User data = marblService.resetPassword(passwordResetForm);
+        log.info("Inside [resetPassword] method of [MarblController]");
+        MarblResponse<User> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.CREATED.value());
+        User data = marblService.changePassword(passwordResetForm);
         response.setData(data);
 
         return ResponseEntity.ok(response);

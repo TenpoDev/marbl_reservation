@@ -15,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RegistrationResendEventListener implements ApplicationListener<RegistrationResendEvent> {
     private static final String VERIFY_REGISTRATION = "/api/v1/registration/verify?token=";
+
     private final RegistrationService registrationService;
 
     @Override

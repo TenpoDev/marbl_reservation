@@ -36,7 +36,7 @@ public class MarblService {
 
     @Transactional
     public User changePassword(PasswordResetForm passwordResetForm) throws MarblException {
-        Optional<User> user = userRepository.findByUserName(passwordResetForm.getEmail());
+        Optional<User> user = userRepository.findByUsername(passwordResetForm.getEmail());
         if (user.isEmpty()) {
             throw new MarblException("User is not present, pls go to registration"); //to-change with better message
         }

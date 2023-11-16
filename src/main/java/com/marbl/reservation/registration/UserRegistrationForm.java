@@ -17,7 +17,7 @@ public class UserRegistrationForm implements Serializable {
     @Serial
     private static final long serialVersionUID = -3025089423749682883L;
 
-    private String userName;
+    private String username;
     private String password;
     private String matchingPassword;
     private BookingForm booking;

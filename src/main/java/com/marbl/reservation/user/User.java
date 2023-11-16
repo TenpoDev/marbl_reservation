@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.marbl.reservation.registry.Registry;
 import com.marbl.reservation.booking.Booking;
 import com.marbl.reservation.token.verification.VerificationPassword;
-import com.marbl.reservation.token.verification.VerificationToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -61,10 +60,7 @@ public class User implements UserDetails,Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<VerificationPassword> verificationPasswords;
 
-    @JsonBackReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
-    private List<VerificationToken> verificationTokens;
-    public void addVerificationPassword(VerificationPassword verificationPassword) {
+       public void addVerificationPassword(VerificationPassword verificationPassword) {
         if (this.verificationPasswords == null) {
             this.verificationPasswords = new ArrayList<>();
         }

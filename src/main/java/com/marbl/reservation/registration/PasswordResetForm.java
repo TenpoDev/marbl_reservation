@@ -17,8 +17,7 @@ public class PasswordResetForm implements Serializable {
     @Serial
     private static final long serialVersionUID = -4737574917753126786L;
 
-    private String email;
-
+    private String username;
     private String oldPassword;
     private String newPassword;
     private String repeatNewPassword;

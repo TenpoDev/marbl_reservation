@@ -1,4 +1,4 @@
-package com.marbl.reservation.configuration;
+package com.marbl.reservation.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

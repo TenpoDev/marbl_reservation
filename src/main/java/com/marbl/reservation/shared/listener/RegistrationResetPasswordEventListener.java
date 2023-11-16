@@ -1,9 +1,11 @@
 package com.marbl.reservation.shared.listener;
 
+import com.marbl.reservation.exception.MarblException;
 import com.marbl.reservation.registration.RegistrationService;
 import com.marbl.reservation.shared.event.RegistrationResetPasswordEvent;
 import com.marbl.reservation.user.User;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -21,19 +23,25 @@ public class RegistrationResetPasswordEventListener implements ApplicationListen
     private final RegistrationService registrationService;
 
     @Override
+    @SneakyThrows
     public void onApplicationEvent(RegistrationResetPasswordEvent event) {
-        User user = registrationService.resetPassword(event.getEmail());
+        log.info("Handling registration reset password event...");
 
-        if(Objects.nonNull(user)) {
-            String url = event.getApplicationUrl().concat(SAVE_REGISTRATION).concat( user.getPassword());
-            log.info("Click the link to login and update your password: {}", url
-            );
-        } else {
-            String url = event.getApplicationUrl().concat(REGISTRATION);
-            log.info("Click the link to registration: {}", url
-            );
+        try {
+            User user = registrationService.resetPassword(event.getEmail());
+            String url;
+
+            if (Objects.nonNull(user)) {
+                url = event.getApplicationUrl().concat(SAVE_REGISTRATION).concat(user.getPassword());
+                log.info("Click the link to login and update your password: {}", url);
+            } else {
+                url = event.getApplicationUrl().concat(REGISTRATION);
+                log.info("Click the link to registration: {}", url);
+            }
+        } catch (MarblException e) {
+            log.error("Error resetting password: {}", e.getMessage());
+            throw new MarblException(e.getMessage());
         }
-
-
     }
+
 }

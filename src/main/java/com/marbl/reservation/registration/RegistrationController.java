@@ -1,6 +1,7 @@
 package com.marbl.reservation.registration;
 
 import com.marbl.reservation.exception.MarblException;
+import com.marbl.reservation.login.MarblService;
 import com.marbl.reservation.shared.SaveResponse;
 import com.marbl.reservation.shared.event.RegistrationCompleteEvent;
 import com.marbl.reservation.exception.MarblError;
@@ -31,6 +32,7 @@ import java.time.OffsetDateTime;
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+    private final MarblService marblService;
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -41,7 +43,7 @@ public class RegistrationController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class)))})
     public ResponseEntity<MarblResponse<Long>> registration(@Valid @RequestBody UserRegistrationForm userRequest, HttpServletRequest httpServletRequest) {
         log.info("Inside [saveReservation] method of [UserController]");
-        MarblResponse<Long> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.OK.value());
+        MarblResponse<Long> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
         User result = registrationService.saveNewUser(userRequest);
         response.setData(result.getUserId());
         applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(result, applicationUrl(httpServletRequest)));
@@ -57,7 +59,7 @@ public class RegistrationController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
     public ResponseEntity<MarblResponse<Object>> verifyRegistration(@RequestParam String token, HttpServletRequest httpServletRequest) throws MarblException {
         log.info("Inside [verifyRegistration] method of [UserController]");
-        MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.OK.value());
+        MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
         registrationService.verifyToken(token);
 
         return ResponseEntity.ok(response);
@@ -70,7 +72,7 @@ public class RegistrationController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
     public ResponseEntity<MarblResponse<Object>> resendVerifyRegistration(@RequestParam("oldToken") String token, HttpServletRequest httpServletRequest) throws MarblException {
         log.info("Inside [resendVerifyRegistration] method of [UserController]");
-        MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.OK.value());
+        MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
         applicationEventPublisher.publishEvent(new RegistrationResendEvent(token, applicationUrl(httpServletRequest)));
 
         return ResponseEntity.ok(response);
@@ -83,16 +85,15 @@ public class RegistrationController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
     public ResponseEntity<MarblResponse<Object>> resetPassword(@RequestBody PasswordResetForm passwordResetForm, HttpServletRequest httpServletRequest) throws MarblException {
         log.info("Inside [resetPassword] method of [UserController]");
-        MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.OK.value());
-        applicationEventPublisher.publishEvent(new RegistrationResetPasswordEvent(passwordResetForm.getEmail(), applicationUrl(httpServletRequest)));
+        MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
+        applicationEventPublisher.publishEvent(new RegistrationResetPasswordEvent(passwordResetForm.getUsername(), applicationUrl(httpServletRequest)));
 
         return ResponseEntity.ok(response);
     }
 
 
-
     private String applicationUrl(HttpServletRequest httpServletRequest) {
-        return "http://"+ httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath();
+        return "http://" + httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath();
     }
 
 }

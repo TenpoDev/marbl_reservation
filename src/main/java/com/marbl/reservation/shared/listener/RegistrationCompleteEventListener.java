@@ -20,16 +20,25 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {
-        //Create the Verification Token for the USER with link
-        User user = event.getUser();
-        String token = UUID.randomUUID().toString();
-        registrationService.saveVerificationTokenForUser(token, user);
-        registrationService.saveVerificationPasswordForUser(user);
-        //Send Mail To User
-        String url = event.getApplicationUrl().concat(VERIFY_REGISTRATION).concat(token);
+        log.info("Handling registration completion event...");
 
-        //sendVerificationEmail()
-        log.info("Click the link to verify your account: {}", url
-        );
+        User user = event.getUser();
+
+        // Create the Verification Token for the USER with link
+        String verificationToken = UUID.randomUUID().toString();
+        registrationService.saveVerificationTokenForUser(verificationToken, user);
+        registrationService.saveVerificationPasswordForUser(user);
+
+        // Send Mail To User
+        String verificationUrl = event.getApplicationUrl().concat(VERIFY_REGISTRATION).concat(verificationToken);
+        sendVerificationEmail(user.getUsername(), verificationUrl);
+
+        log.info("Verification link sent successfully: {}", verificationUrl);
     }
+
+    private void sendVerificationEmail(String email, String verificationUrl) {
+        log.info("Sending verification email to {}: {}", email, verificationUrl);
+        // Implementa il codice per l'invio effettivo dell'email di verifica
+    }
+
 }

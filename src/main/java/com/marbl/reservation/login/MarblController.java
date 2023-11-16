@@ -29,15 +29,16 @@ public class MarblController {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @GetMapping(value = "/public/v1/login")
+    @PostMapping(value = "/public/v1/login")
     @Operation(tags = "Login", description = "Verify token", summary = "We are able to check if user is allowed using token.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
-    public ResponseEntity<MarblResponse<Object>> login(@RequestParam String token, HttpServletRequest httpServletRequest) throws MarblException {
-        log.info("Inside [verifyRegistration] method of [MarblController]");
+    public ResponseEntity<MarblResponse<Object>> login(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) throws MarblException {
+        log.info("Inside [login] method of [MarblController]");
         MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.OK.value());
-
+        String token =  marblService.login(loginRequest);
+        response.setData(token);
         return ResponseEntity.ok(response);
     }
 
@@ -55,7 +56,7 @@ public class MarblController {
         return ResponseEntity.ok(response);
     }
 
-    private String applicationUrl(HttpServletRequest httpServletRequest) {
-        return "http://"+ httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath();
-    }
+//    private String applicationUrl(HttpServletRequest httpServletRequest) {
+//        return "http://"+ httpServletRequest.getServerName() + ":" + httpServletRequest.getServerPort() + httpServletRequest.getContextPath();
+//    }
 }

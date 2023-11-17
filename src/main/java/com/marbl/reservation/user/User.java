@@ -3,7 +3,9 @@ package com.marbl.reservation.user;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.marbl.reservation.registry.Registry;
 import com.marbl.reservation.booking.Booking;
+import com.marbl.reservation.token.Token;
 import com.marbl.reservation.token.verification.VerificationPassword;
+import com.marbl.reservation.token.verification.VerificationToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -58,7 +60,23 @@ public class User implements UserDetails,Serializable {
 
     @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<Token> tokens;
+
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<VerificationToken> verificationToken;
+
+    @JsonBackReference
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private List<VerificationPassword> verificationPasswords;
+
+    public void addVerificationToken(VerificationToken verificationToken) {
+        if (this.verificationToken == null) {
+            this.verificationToken = new ArrayList<>();
+        }
+        verificationToken.setUser(this);
+        this.verificationToken.add(verificationToken);
+    }
 
        public void addVerificationPassword(VerificationPassword verificationPassword) {
         if (this.verificationPasswords == null) {

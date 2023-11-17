@@ -4,6 +4,9 @@ import com.marbl.reservation.config.JwtService;
 import com.marbl.reservation.exception.MarblException;
 import com.marbl.reservation.registration.PasswordResetForm;
 import com.marbl.reservation.shared.event.RegistrationResendEvent;
+import com.marbl.reservation.token.Token;
+import com.marbl.reservation.token.TokenRepository;
+import com.marbl.reservation.token.TokenType;
 import com.marbl.reservation.token.verification.VerificationPassword;
 import com.marbl.reservation.user.User;
 import com.marbl.reservation.user.UserRepository;
@@ -16,14 +19,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.Optional;
+
+import static com.marbl.reservation.token.TokenType.BEARER;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class MarblService {
+    private final TokenRepository tokenRepository;
 
     private final JwtService jwtService;
 
@@ -54,9 +61,34 @@ public class MarblService {
             throw new MarblException("User or Password are wrong");
         }
 
-        return jwtService.generateToken(user.get());
+        var jwtToken = jwtService.generateToken(user.get());
+        revokeAllUserTokens(user.get());
+        saveUserToken(user.get(), jwtToken);
+
+        return jwtToken;
     }
 
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+
+        tokenRepository.save(token);
+        log.info("Jwt Token stored successfully.");
+    }
+
+    private void revokeAllUserTokens(User user){
+        var validUserTokens = tokenRepository.findAllValidTokensByUser(user.getUserId());
+        if(CollectionUtils.isEmpty(validUserTokens)) {
+            return;
+        }
+        validUserTokens.forEach(t -> {t.setRevoked(true); t.setExpired(true);});
+        tokenRepository.saveAll(validUserTokens);
+    }
 
     @Transactional
     public User changePassword(PasswordResetForm passwordResetForm) throws MarblException {

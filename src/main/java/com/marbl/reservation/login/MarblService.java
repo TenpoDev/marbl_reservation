@@ -62,6 +62,7 @@ public class MarblService {
         }
 
         var jwtToken = jwtService.generateToken(user.get());
+//        var refreshToken = jwtService.generateRefreshToken(user.get());
         revokeAllUserTokens(user.get());
         saveUserToken(user.get(), jwtToken);
 

@@ -94,14 +94,14 @@ public class RegistrationService {
 
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (Objects.isNull(verificationToken)) {
-            log.error("Token verification failed. Token not found.");
+            log.error("Verification Token verification failed. Token not found.");
             throw new MarblException("User not registered.");
         }
         //Change calendar
         Calendar cal = Calendar.getInstance();
         if (verificationToken.getExpirationTime().getTime() - cal.getTime().getTime() <= 0) {
             verificationTokenRepository.delete(verificationToken);
-            log.error("Token verification failed. Token expired for user: {}", verificationToken.getUser().getUsername());
+            log.error("Verification Token verification failed. Verification Token expired for user: {}", verificationToken.getUser().getUsername());
             throw new MarblException("Verification Token is expired.");
         }
 
@@ -109,17 +109,17 @@ public class RegistrationService {
         user.setEnabled(Boolean.TRUE);
         userRepository.save(user);
 
-        log.info("Token verified successfully for user: {}", user.getUsername());
+        log.info("Verification Token verified successfully for user: {}", user.getUsername());
     }
 
     @Transactional
     public String generateNewVerifyToken(String oldToken) throws MarblException {
-        log.info("Attempting to verify old token: {}", oldToken);
+        log.info("Attempting to verify old Verification Token: {}", oldToken);
 
         VerificationToken verificationToken = verificationTokenRepository.findByToken(oldToken);
 
         if (verificationToken == null) {
-            log.error("Old token not found: {}", oldToken);
+            log.error("Old Verification Token not found: {}", oldToken);
             throw new MarblException("Old token not found");
         }
 
@@ -127,7 +127,7 @@ public class RegistrationService {
         verificationToken.setToken(newToken);
         verificationTokenRepository.save(verificationToken);
 
-        log.info("New Token stored successfully.");
+        log.info("New Verification Token stored successfully.");
 
         return newToken;
     }

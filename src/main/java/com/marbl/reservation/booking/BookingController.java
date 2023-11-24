@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
@@ -32,6 +33,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('user:read')")
     @Operation(tags = "Booking", description = "Retrieve all bookings.", summary = "We are able to retrieve all bookings.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AllBookingResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -46,6 +48,7 @@ public class BookingController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:read')")
     @Operation(tags = "Booking", description = "Retrieve the selected booking.", summary = "We are able to retrieve the selected booking by id.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleBookingResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -60,6 +63,7 @@ public class BookingController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('user:create')")
     @Operation(tags = "Booking", description = "Save a new booking.", summary = "We are able to store a new booking.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -74,6 +78,7 @@ public class BookingController {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:upload')")
     @Operation(tags = "Booking", description = "Update a booking.", summary = "We are able to update an already stored booking.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -89,6 +94,7 @@ public class BookingController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:delete')")
     @Operation(tags = "Booking", description = "Delete the selected booking.", summary = "We are able to delete the selected booking by id.")
     @ApiResponses(value =
             {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),

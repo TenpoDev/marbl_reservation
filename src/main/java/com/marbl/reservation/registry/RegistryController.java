@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
@@ -31,6 +32,7 @@ public class RegistryController {
     private final RegistryService registryService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('user:read')")
     @Operation(tags = "Registry", description = "Retrieve all registry", summary = "We are able to retrieve all registry")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AllRegistryResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -45,6 +47,7 @@ public class RegistryController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:read')")
     @Operation(tags = "Registry", description = "Retrieve the selected registry", summary = "We are able to retrieve the selected registry by id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleRegistryResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -59,6 +62,7 @@ public class RegistryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('user:create')")
     @Operation(tags = "Registry", description = "Save a new registry", summary = "We are able to store a new reservation")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -73,6 +77,7 @@ public class RegistryController {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:upload')")
     @Operation(tags = "Registry", description = "Update a registry", summary = "We are able to update an already stored registry")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -87,6 +92,7 @@ public class RegistryController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:delete')")
     @Operation(tags = "Registry", description = "Delete the selected registry", summary = "We are able to delete the selected registry by id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),

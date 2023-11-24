@@ -15,9 +15,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
@@ -25,13 +27,14 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('user:read')")
     @Operation(tags = "User", description = "Retrieve all user", summary = "We are able to retrieve all user")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AllUserResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -46,6 +49,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:read')")
     @Operation(tags = "User", description = "Retrieve the selected user", summary = "We are able to retrieve the selected user by id")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SingleUserResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -60,6 +64,7 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('user:create')")
     @Operation(tags = "User", description = "Save a new user", summary = "We are able to store a new user")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
@@ -74,11 +79,12 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:update')")
     @Operation(tags = "User", description = "Update a user", summary = "We are able to update an already stored user")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class)))})
-    public ResponseEntity<MarblResponse<Long>> updateUser(@PathVariable("id") Long userId, @Valid @RequestBody Booking userRequest, HttpServletRequest httpServletRequest) throws MarblException {
+    public ResponseEntity<MarblResponse<Long>> updateUser(@PathVariable("id") Long userId, @Valid @RequestBody User userRequest, HttpServletRequest httpServletRequest) throws MarblException {
         log.info("Inside [updateUser] method of [UserController]");
         MarblResponse<Long> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(),HttpStatus.OK.value());
 
@@ -87,7 +93,23 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('admin:update')")
+    @Operation(tags = "User", description = "Update a user", summary = "We are able to update an already stored user")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class)))})
+    public ResponseEntity<MarblResponse<Long>> updateUserRole(@PathVariable("id") Long userId, @Valid @RequestBody UserRequest userRequest, HttpServletRequest httpServletRequest) throws MarblException {
+        log.info("Inside [updateUser] method of [UserController]");
+        MarblResponse<Long> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(),HttpStatus.OK.value());
+
+        User result = userService.updateUserRole(userId,userRequest);
+        response.setData(result.getUserId());
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('user:delete')")
     @Operation(tags = "User", description = "Delete the selected reservation", summary = "We are able to delete the selected reservation by id")
     @ApiResponses(value =
             {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),

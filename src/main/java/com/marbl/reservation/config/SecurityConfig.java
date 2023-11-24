@@ -22,9 +22,20 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     //Paths
-    public static final String API_V_1_USERS = "/api/v1/users/**";
-    public static final String API_V_1_BOOKINGS = "/api/v1/bookings/**";
-    private static final String[] WHITE_LIST_URL = {"/api/v1/registration/**", "/public/**"};
+    private static final String[] WHITE_LIST_URL = {
+            "/public/**",
+            "/api/v1/registration/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "swagger-ui.html"
+    };
 
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -39,11 +50,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth ->
-                            auth.requestMatchers(WHITE_LIST_URL)
-                                    .permitAll()
-                                    .anyRequest()
-                                    .authenticated()
-                        )
+                                auth.requestMatchers(WHITE_LIST_URL)
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated()
+                )
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

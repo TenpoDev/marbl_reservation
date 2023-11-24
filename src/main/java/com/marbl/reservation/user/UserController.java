@@ -7,11 +7,13 @@ import com.marbl.reservation.shared.MarblResponse;
 import com.marbl.reservation.shared.SaveResponse;
 import com.marbl.reservation.user.response.AllUserResponse;
 import com.marbl.reservation.user.response.SingleUserResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -95,7 +97,7 @@ public class UserController {
 
     @PatchMapping(value = "/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
-    @Operation(tags = "User", description = "Update a user", summary = "We are able to update an already stored user")
+    @Operation(tags = "User", description = "Admin can update Role for other users.", summary = "The Admin are allow to update the role for other user.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SaveResponse.class)))})

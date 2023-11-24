@@ -1,6 +1,5 @@
 package com.marbl.reservation.user;
 
-import com.marbl.reservation.booking.Booking;
 import com.marbl.reservation.exception.MarblException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,16 @@ public class UserService {
         return userRepository.save(userRequest);
     }
     @Transactional
-    public User updateReservation(Long userId, Booking userRequest) throws MarblException {
+    public User updateReservation(Long userId, User userRequest) throws MarblException {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) {
+            throw new MarblException(NOT_FOUND);
+        }
+        BeanUtils.copyProperties(userRequest,user,"id");
+        return userRepository.save(user.get());
+    }
+    @Transactional
+    public User updateUserRole(Long userId, UserRequest userRequest) throws MarblException {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()) {
             throw new MarblException(NOT_FOUND);
@@ -53,4 +61,6 @@ public class UserService {
         }
         userRepository.deleteById(userId);
     }
+
+
 }

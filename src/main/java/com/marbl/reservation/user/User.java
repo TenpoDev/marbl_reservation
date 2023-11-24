@@ -1,8 +1,8 @@
 package com.marbl.reservation.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.marbl.reservation.registry.Registry;
 import com.marbl.reservation.booking.Booking;
+import com.marbl.reservation.registry.Registry;
 import com.marbl.reservation.token.Token;
 import com.marbl.reservation.token.verification.VerificationPassword;
 import com.marbl.reservation.token.verification.VerificationToken;
@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
@@ -88,7 +87,7 @@ public class User implements UserDetails,Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getAuthorities();
     }
 
     @Override

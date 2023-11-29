@@ -32,6 +32,7 @@ public class RegistrationResetPasswordEventListener implements ApplicationListen
             String url;
 
             if (Objects.nonNull(user)) {
+                //To fix this process
                 url = event.getApplicationUrl().concat(SAVE_REGISTRATION).concat(user.getPassword());
                 log.info("Click the link to login and update your password: {}", url);
             } else {

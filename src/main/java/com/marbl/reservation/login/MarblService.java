@@ -1,6 +1,7 @@
 package com.marbl.reservation.login;
 
 import com.marbl.reservation.config.JwtService;
+import com.marbl.reservation.exception.ExceptionMessage;
 import com.marbl.reservation.exception.MarblException;
 import com.marbl.reservation.registration.PasswordResetForm;
 import com.marbl.reservation.shared.event.RegistrationResendEvent;
@@ -21,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.security.Principal;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.marbl.reservation.token.TokenType.BEARER;
@@ -92,23 +95,24 @@ public class MarblService {
     }
 
     @Transactional
-    public User changePassword(PasswordResetForm passwordResetForm) throws MarblException {
-        Optional<User> user = userRepository.findByUsername(passwordResetForm.getUsername());
-        if (user.isEmpty()) {
+    public User changePassword(PasswordResetForm passwordResetForm, Principal connectedUser) throws MarblException {
+        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+        if (Objects.isNull(user)) {
             throw new MarblException("User is not present, pls go to registration"); //to-change with better message
-        } else if (!user.get().isEnabled()) {
+        } else if (!user.isEnabled()) {
 
             applicationEventPublisher.publishEvent(new RegistrationResendEvent("", applicationUrl(httpServletRequest)));
             return null;
-        } else if (passwordEncoder.matches(passwordResetForm.getOldPassword(), user.get().getPassword())) {
+        } else if (passwordEncoder.matches(passwordResetForm.getOldPassword(), user.getPassword())) {
             //check logic: newPass compare repeatNewPassword | Create utils class
-            user.get().setPassword(passwordEncoder.encode(passwordResetForm.getNewPassword()));
-            if (user.get().getVerificationPasswords().stream().anyMatch(psw -> psw.getExpirationTime().compareTo(new Date()) < 0 && passwordEncoder.matches(passwordResetForm.getOldPassword(), psw.getPasswordHash()))) {
+            user.setPassword(passwordEncoder.encode(passwordResetForm.getNewPassword()));
+            if (user.getVerificationPasswords().stream().anyMatch(psw -> psw.getExpirationTime().compareTo(new Date()) < 0 && passwordEncoder.matches(passwordResetForm.getOldPassword(), psw.getPasswordHash()))) {
                 throw new MarblException("Password was recently used."); //to-change with better message
             }
-            user.get().addVerificationPassword(new VerificationPassword(passwordEncoder.encode(passwordResetForm.getNewPassword())));
+            user.addVerificationPassword(new VerificationPassword(passwordEncoder.encode(passwordResetForm.getNewPassword())));
 
-            return userRepository.save(user.get());
+            return userRepository.save(user);
         } else {
             throw new MarblException("Password is wrong, pls insert the old password"); //to-change with better message
         }

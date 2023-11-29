@@ -5,6 +5,7 @@ import com.marbl.reservation.exception.MarblException;
 import com.marbl.reservation.registration.PasswordResetForm;
 import com.marbl.reservation.shared.MarblResponse;
 import com.marbl.reservation.user.User;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.OffsetDateTime;
 
 @Slf4j
@@ -47,10 +49,10 @@ public class MarblController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
-    public ResponseEntity<MarblResponse<User>> resetPassword(@RequestBody PasswordResetForm passwordResetForm, HttpServletRequest httpServletRequest) throws MarblException {
+    public ResponseEntity<MarblResponse<User>> resetPassword(@RequestBody PasswordResetForm passwordResetForm, Principal connectedUser, HttpServletRequest httpServletRequest) throws MarblException {
         log.info("Inside [resetPassword] method of [MarblController]");
         MarblResponse<User> response = new MarblResponse<>(OffsetDateTime.now(),httpServletRequest.getServletPath(), HttpStatus.CREATED.value());
-        User data = marblService.changePassword(passwordResetForm);
+        User data = marblService.changePassword(passwordResetForm, connectedUser);
         response.setData(data);
 
         return ResponseEntity.ok(response);

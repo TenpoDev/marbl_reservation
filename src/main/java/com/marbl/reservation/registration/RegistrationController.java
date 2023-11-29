@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.OffsetDateTime;
 
 @Slf4j
@@ -83,10 +84,10 @@ public class RegistrationController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MarblError.class))}),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MarblResponse.class)))})
-    public ResponseEntity<MarblResponse<Object>> resetPassword(@RequestBody PasswordResetForm passwordResetForm, HttpServletRequest httpServletRequest) throws MarblException {
+    public ResponseEntity<MarblResponse<Object>> resetPassword(Principal connectedUser, HttpServletRequest httpServletRequest) throws MarblException {
         log.info("Inside [resetPassword] method of [UserController]");
         MarblResponse<Object> response = new MarblResponse<>(OffsetDateTime.now(), httpServletRequest.getServletPath(), HttpStatus.OK.value());
-        applicationEventPublisher.publishEvent(new RegistrationResetPasswordEvent(passwordResetForm.getUsername(), applicationUrl(httpServletRequest)));
+        applicationEventPublisher.publishEvent(new RegistrationResetPasswordEvent(connectedUser.getName(), applicationUrl(httpServletRequest)));
 
         return ResponseEntity.ok(response);
     }
